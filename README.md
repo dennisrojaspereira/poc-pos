@@ -28,6 +28,7 @@ flowchart LR
 ```
 
 ## Qualidade
+- Todo commit deve validar cobertura minima de 80% nas linhas Java alteradas
 - Toda nova implementação deve manter cobertura mínima de 80%
 - Toda mudança deve passar em `mvn test`
 - Toda mudança deve passar na regressão `k6`
@@ -127,6 +128,17 @@ stop-local.bat
 ```bat
 mvn test
 ```
+
+### Validar cobertura das mudancas antes do commit
+O repositorio usa um `pre-commit` versionado em `.githooks/pre-commit`.
+
+Para ativar o hook localmente:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+No commit, o hook executa `mvn test jacoco:report` e bloqueia a operacao se as linhas Java alteradas e staged tiverem menos de 80% de cobertura.
 
 ### Regressão com dashboard k6
 ```bat

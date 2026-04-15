@@ -28,6 +28,7 @@
 - dashboards devem permitir segmentação por `feature_variant` e investigação por `correlation_id`/`traceId`
 
 ## Quality Gates
+- cobertura minima de 80% nas linhas Java alteradas a cada commit, validada em `pre-commit`
 - cobertura mínima de 80% para cada nova implementação
 - toda mudança deve passar em `mvn test`
 - toda mudança deve passar em regressão `k6`
