@@ -15,12 +15,13 @@ spec:
       containers:
         - name: opa
           image: openpolicyagent/opa:0.70.0
-          args: ["run", "--server", "--addr=0.0.0.0:8181", "/policies"]
+          args: ["run", "--server", "--addr=0.0.0.0:8181", "/policies/authz.rego"]
           ports:
             - containerPort: 8181
           volumeMounts:
             - name: opa-policies
-              mountPath: /policies
+              mountPath: /policies/authz.rego
+              subPath: authz.rego
           readinessProbe:
             httpGet:
               path: /health

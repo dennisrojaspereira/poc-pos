@@ -78,7 +78,8 @@ services:
       DB_URL: jdbc:postgresql://merchant-postgres:5432/merchant_db
       DB_USERNAME: postgres
       DB_PASSWORD: postgres
-      IDP_ISSUER_URI: http://keycloak:8080/realms/poc-pos
+      IDP_ISSUER_URI: http://localhost:8180/realms/poc-pos
+      IDP_JWK_SET_URI: http://keycloak:8080/realms/poc-pos/protocol/openid-connect/certs
       OPA_URL: http://opa:8181/v1/data/merchant/authz/allow
     ports:
       - "8083:8080"

@@ -1,18 +1,29 @@
 package merchant.authz
 
-default allow := false
+default allow = false
 
-allow if {
+allow {
     input.method == "GET"
     role_allowed_for_read
 }
 
-allow if {
+allow {
     input.method == "POST"
-    "admin" in input.roles
+    some i
+    input.roles[i] == "admin"
 }
 
-role_allowed_for_read if {
-    some role in input.roles
-    role == "admin" or role == "operator" or role == "auditor"
+role_allowed_for_read {
+    some i
+    input.roles[i] == "admin"
+}
+
+role_allowed_for_read {
+    some i
+    input.roles[i] == "operator"
+}
+
+role_allowed_for_read {
+    some i
+    input.roles[i] == "auditor"
 }

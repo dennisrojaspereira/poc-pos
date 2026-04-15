@@ -5,5 +5,6 @@ metadata:
 data:
   DB_URL: jdbc:postgresql://merchant-postgres.pos-system.svc.cluster.local:5432/merchant_db
   DB_USERNAME: postgres
-  IDP_ISSUER_URI: http://keycloak.pos-system.svc.cluster.local:8080/realms/poc-pos
+  IDP_ISSUER_URI: http://localhost:8088/realms/poc-pos
+  IDP_JWK_SET_URI: http://keycloak.pos-system.svc.cluster.local:8080/realms/poc-pos/protocol/openid-connect/certs
   OPA_URL: http://opa.pos-system.svc.cluster.local:8181/v1/data/merchant/authz/allow

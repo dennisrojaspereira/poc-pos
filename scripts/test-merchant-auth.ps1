@@ -40,9 +40,10 @@ function Invoke-AuthorizedRequest {
     $headers = @{ Authorization = "Bearer $Token" }
     if ($Body) {
         $headers["Content-Type"] = "application/json"
+        return Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body -UseBasicParsing
     }
 
-    return Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -Body $Body -UseBasicParsing
+    return Invoke-WebRequest -Method $Method -Uri $Uri -Headers $headers -UseBasicParsing
 }
 
 $adminToken = Get-AccessToken -Username $AdminUser -Password $AdminPassword

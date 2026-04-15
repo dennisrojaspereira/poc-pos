@@ -25,6 +25,9 @@
     {
       "username": "admin-user",
       "enabled": true,
+      "firstName": "Admin",
+      "lastName": "User",
+      "email": "admin-user@poc-pos.local",
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
       "realmRoles": ["admin"],
@@ -33,6 +36,9 @@
     {
       "username": "operator-user",
       "enabled": true,
+      "firstName": "Operator",
+      "lastName": "User",
+      "email": "operator-user@poc-pos.local",
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "operator123", "temporary": false }],
       "realmRoles": ["operator"],
@@ -41,6 +47,9 @@
     {
       "username": "auditor-user",
       "enabled": true,
+      "firstName": "Auditor",
+      "lastName": "User",
+      "email": "auditor-user@poc-pos.local",
       "emailVerified": true,
       "credentials": [{ "type": "password", "value": "auditor123", "temporary": false }],
       "realmRoles": ["auditor"],

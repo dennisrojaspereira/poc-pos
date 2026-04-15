@@ -184,6 +184,11 @@ Invoke-WebRequest `
   -Body $body
 ```
 
+### Smoke test automÃ¡tico com token real
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-merchant-auth.ps1 -ApiBaseUrl http://localhost:8083 -IdpBaseUrl http://localhost:8180
+```
+
 ## Kubernetes local
 ### Subir `kind` + `Istio` + `Argo CD`
 ```bat
@@ -198,6 +203,11 @@ stop-kind-platform.bat
 ### Bootstrap do `Application` no `Argo CD`
 ```powershell
 .\bootstrap-argocd-app.ps1 -RepoUrl https://github.com/seu-org/seu-repo.git -TargetRevision main
+```
+
+### Smoke test do `merchant-service` via ingress local
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts/test-merchant-auth.ps1
 ```
 
 ## Observabilidade

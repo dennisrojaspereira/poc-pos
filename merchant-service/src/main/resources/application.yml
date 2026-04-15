@@ -17,6 +17,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: ${IDP_ISSUER_URI:http://localhost:8180/realms/poc-pos}
+          jwk-set-uri: ${IDP_JWK_SET_URI:http://localhost:8180/realms/poc-pos/protocol/openid-connect/certs}
 
 management:
   endpoints:
