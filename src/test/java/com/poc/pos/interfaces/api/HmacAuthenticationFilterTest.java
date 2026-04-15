@@ -21,6 +21,7 @@ import java.util.HexFormat;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,6 +73,56 @@ class HmacAuthenticationFilterTest {
                         .header("X-Correlation-Id", "corr-1")
                         .header("X-Signature", sign("POST", "/authorize", timestamp, "corr-1", body)))
                 .andExpect(status().isOk());
+    }
+
+    @Test
+    void shouldRejectTamperedBodyInMitmScenario() throws Exception {
+        String originalBody = """
+                {"transactionId":"tx-1","terminalId":"term-1","nsu":"nsu-1","amount":10.00}
+                """.trim();
+        String tamperedBody = """
+                {"transactionId":"tx-1","terminalId":"term-1","nsu":"nsu-1","amount":999.99}
+                """.trim();
+        String timestamp = Instant.now().toString();
+
+        mockMvc.perform(post("/authorize")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(tamperedBody)
+                        .header("X-Timestamp", timestamp)
+                        .header("X-Correlation-Id", "corr-mitm")
+                        .header("X-Signature", sign("POST", "/authorize", timestamp, "corr-mitm", originalBody)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void shouldAcceptReplayOfSignedRequestWithinAllowedWindow() throws Exception {
+        when(authorizeTransactionUseCase.execute(any())).thenReturn(
+                com.poc.pos.domain.model.Transaction.authorize("tx-1", "term-1", "nsu-1", new java.math.BigDecimal("10.00"))
+        );
+
+        String body = """
+                {"transactionId":"tx-1","terminalId":"term-1","nsu":"nsu-1","amount":10.00}
+                """.trim();
+        String timestamp = Instant.now().toString();
+        String signature = sign("POST", "/authorize", timestamp, "corr-replay", body);
+
+        mockMvc.perform(post("/authorize")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+                        .header("X-Timestamp", timestamp)
+                        .header("X-Correlation-Id", "corr-replay")
+                        .header("X-Signature", signature))
+                .andExpect(status().isOk())
+                .andExpect(header().string("X-Correlation-Id", "corr-replay"));
+
+        mockMvc.perform(post("/authorize")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(body)
+                        .header("X-Timestamp", timestamp)
+                        .header("X-Correlation-Id", "corr-replay")
+                        .header("X-Signature", signature))
+                .andExpect(status().isOk())
+                .andExpect(header().string("X-Correlation-Id", "corr-replay"));
     }
 
     private String sign(String method, String path, String timestamp, String correlationId, String body) throws Exception {

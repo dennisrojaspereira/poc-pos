@@ -158,6 +158,15 @@ Dashboard:
 - `http://localhost:5666`
 - export HTML em `perf/k6/reports/security-dashboard.html`
 
+### Simulacao MITM e replay com dashboard k6
+```bat
+run-k6-mitm.bat
+```
+
+Dashboard:
+- `http://localhost:5667`
+- export HTML em `perf/k6/reports/mitm-dashboard.html`
+
 ### Pipeline local obrigatório para cada mudança
 Com a API em execução:
 
@@ -207,6 +216,17 @@ Esse comando executa:
 ```powershell
 .\invoke-authorize-local.ps1
 ```
+
+### Teste E2E de MITM e replay no Maven
+```bat
+mvn -Dtest=HmacMitmE2ETest test
+```
+
+Esse teste cobre:
+- adulteracao de payload no caminho com assinatura calculada sobre o corpo original
+- replay da mesma requisicao assinada dentro da janela permitida
+
+Hoje o replay e aceito como requisicao idempotente. O teste existe para caracterizar o comportamento atual e deixar esse risco visivel.
 
 ### Chamada manual de health
 ```powershell
