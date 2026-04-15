@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: merchant-service-config
+data:
+  DB_URL: jdbc:postgresql://merchant-postgres.pos-system.svc.cluster.local:5432/merchant_db
+  DB_USERNAME: postgres
+  IDP_ISSUER_URI: http://keycloak.pos-system.svc.cluster.local:8080/realms/poc-pos
+  OPA_URL: http://opa.pos-system.svc.cluster.local:8181/v1/data/merchant/authz/allow

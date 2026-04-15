@@ -4,10 +4,16 @@ namespace: pos-system
 resources:
   - namespace.yaml
   - postgres.yaml
+  - merchant-postgres.yaml
   - payment-processor-mock.yaml
   - app-config.yaml
   - app-secret.yaml
+  - merchant-service-config.yaml
+  - merchant-service-secret.yaml
+  - keycloak.yaml
+  - opa.yaml
   - pos-api.yaml
+  - merchant-service.yaml
   - istio-ingress.yaml
 configMapGenerator:
   - name: wiremock-mappings
@@ -15,3 +21,9 @@ configMapGenerator:
       - authorize.json=wiremock/authorize.json
       - confirm.json=wiremock/confirm.json
       - void.json=wiremock/void.json
+  - name: keycloak-realm
+    files:
+      - realm-poc-pos.json=keycloak/realm-poc-pos.json
+  - name: opa-policies
+    files:
+      - authz.rego=opa/authz.rego

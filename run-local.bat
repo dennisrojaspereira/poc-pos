@@ -39,7 +39,11 @@ set HMAC_SECRET=change-me
 echo.
 echo Dependencias prontas.
 echo PostgreSQL: localhost:5432
+echo Merchant PostgreSQL: localhost:5433
 echo Payment processor mock: http://localhost:8081
+echo Keycloak: http://localhost:8180  ^(admin/admin^)
+echo OPA: http://localhost:8181
+echo Merchant Service: http://localhost:8083
 echo Prometheus: http://localhost:9090
 echo Grafana: http://localhost:3000  ^(admin/admin^)
 echo API: http://localhost:8080

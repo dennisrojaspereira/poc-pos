@@ -23,6 +23,66 @@ services:
     volumes:
       - ./infra/wiremock/mappings:/home/wiremock/mappings
 
+  merchant-postgres:
+    image: postgres:16-alpine
+    container_name: poc-merchant-postgres
+    environment:
+      POSTGRES_DB: merchant_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d merchant_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.1.4
+    container_name: poc-pos-keycloak
+    command: ["start-dev", "--import-realm"]
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - "8180:8080"
+    volumes:
+      - ./infra/keycloak/realm-poc-pos.json:/opt/keycloak/data/import/realm-poc-pos.json:ro
+
+  opa:
+    image: openpolicyagent/opa:0.70.0
+    container_name: poc-pos-opa
+    command:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "/policies"
+    ports:
+      - "8181:8181"
+    volumes:
+      - ./infra/opa/policies:/policies:ro
+
+  merchant-service:
+    build:
+      context: ./merchant-service
+    container_name: poc-merchant-service
+    depends_on:
+      merchant-postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+      opa:
+        condition: service_started
+    environment:
+      DB_URL: jdbc:postgresql://merchant-postgres:5432/merchant_db
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      IDP_ISSUER_URI: http://keycloak:8080/realms/poc-pos
+      OPA_URL: http://opa:8181/v1/data/merchant/authz/allow
+    ports:
+      - "8083:8080"
+
   prometheus:
     image: prom/prometheus:v3.3.1
     container_name: poc-pos-prometheus

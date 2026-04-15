@@ -38,8 +38,14 @@ echo Construindo imagem da API...
 docker build -t poc-pos:kind .
 if errorlevel 1 exit /b 1
 
+echo Construindo imagem do merchant-service...
+docker build -t poc-merchant-service:kind merchant-service
+if errorlevel 1 exit /b 1
+
 echo Carregando imagem no kind...
 kind load docker-image poc-pos:kind --name poc-pos
+if errorlevel 1 exit /b 1
+kind load docker-image poc-merchant-service:kind --name poc-pos
 if errorlevel 1 exit /b 1
 
 echo Aplicando manifests da aplicacao...
@@ -49,13 +55,23 @@ if errorlevel 1 exit /b 1
 echo Aguardando rollout da aplicacao...
 kubectl rollout status deployment/postgres -n pos-system --timeout=180s
 if errorlevel 1 exit /b 1
+kubectl rollout status deployment/merchant-postgres -n pos-system --timeout=180s
+if errorlevel 1 exit /b 1
 kubectl rollout status deployment/payment-processor-mock -n pos-system --timeout=180s
 if errorlevel 1 exit /b 1
+kubectl rollout status deployment/keycloak -n pos-system --timeout=240s
+if errorlevel 1 exit /b 1
+kubectl rollout status deployment/opa -n pos-system --timeout=180s
+if errorlevel 1 exit /b 1
 kubectl rollout status deployment/pos-api -n pos-system --timeout=240s
+if errorlevel 1 exit /b 1
+kubectl rollout status deployment/merchant-service -n pos-system --timeout=240s
 if errorlevel 1 exit /b 1
 
 echo.
 echo Cluster kind: kind-poc-pos
 echo API via Istio ingress: http://localhost:8088
+echo Merchant Service via Istio ingress: http://localhost:8088/api/merchants
+echo Keycloak via Istio ingress: http://localhost:8088/realms/poc-pos
 echo Argo CD UI: execute port-forward-argocd.bat e abra https://localhost:8089
 echo Senha inicial do Argo CD: kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" ^| powershell -NoProfile -Command "[Text.Encoding]::UTF8.GetString([Convert]::FromBase64String((Get-Content -Raw -)))"

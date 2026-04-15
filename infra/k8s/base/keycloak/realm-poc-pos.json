@@ -1,0 +1,50 @@
+{
+  "realm": "poc-pos",
+  "enabled": true,
+  "roles": {
+    "realm": [
+      { "name": "admin" },
+      { "name": "operator" },
+      { "name": "auditor" }
+    ]
+  },
+  "clients": [
+    {
+      "clientId": "merchant-service",
+      "name": "merchant-service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "redirectUris": ["*"],
+      "webOrigins": ["*"]
+    }
+  ],
+  "users": [
+    {
+      "username": "admin-user",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "admin123", "temporary": false }],
+      "realmRoles": ["admin"],
+      "requiredActions": []
+    },
+    {
+      "username": "operator-user",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "operator123", "temporary": false }],
+      "realmRoles": ["operator"],
+      "requiredActions": []
+    },
+    {
+      "username": "auditor-user",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [{ "type": "password", "value": "auditor123", "temporary": false }],
+      "realmRoles": ["auditor"],
+      "requiredActions": []
+    }
+  ]
+}

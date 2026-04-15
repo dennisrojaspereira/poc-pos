@@ -1,9 +1,17 @@
 # API Contract
 
-## Headers obrigatórios
+## Headers obrigatórios POS
 - `X-Timestamp`
 - `X-Correlation-Id`
 - `X-Signature`
+
+## Autenticação de usuários
+- endpoints administrativos e de cadastro usam `Authorization: Bearer <jwt>`
+- JWT emitido pelo IdP OIDC (`Keycloak`)
+- roles esperadas no token:
+  - `admin`
+  - `operator`
+  - `auditor`
 
 ## Authorize
 `POST /authorize`
@@ -34,3 +42,17 @@ Body:
 
 Response:
 - `204 No Content`
+
+## Merchant Service
+Base path:
+- `/api/merchants`
+
+Endpoints iniciais:
+- `POST /api/merchants`
+- `GET /api/merchants`
+- `GET /api/merchants/{merchantId}`
+
+Autorização:
+- `admin`: criar e consultar
+- `operator`: consultar
+- `auditor`: consultar

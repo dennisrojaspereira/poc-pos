@@ -6,3 +6,6 @@ images:
   - name: poc-pos
     newName: poc-pos
     newTag: kind
+  - name: poc-merchant-service
+    newName: poc-merchant-service
+    newTag: kind

@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: merchant-service
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/merchant_db}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${IDP_ISSUER_URI:http://localhost:8180/realms/poc-pos}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  opa:
+    url: ${OPA_URL:http://localhost:8181/v1/data/merchant/authz/allow}

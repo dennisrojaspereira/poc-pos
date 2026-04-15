@@ -10,6 +10,10 @@ echo Rodando testes Maven...
 mvn test
 if errorlevel 1 exit /b 1
 
+echo Rodando testes do merchant-service...
+mvn -f merchant-service/pom.xml test
+if errorlevel 1 exit /b 1
+
 echo Validando health local em %BASE_URL% ...
 powershell -NoProfile -Command "try { $r = Invoke-WebRequest '%BASE_URL%/actuator/health' -UseBasicParsing; if ($r.StatusCode -ne 200) { exit 1 } } catch { exit 1 }"
 if errorlevel 1 (

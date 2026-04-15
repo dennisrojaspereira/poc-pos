@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: merchant-postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: merchant-postgres
+  template:
+    metadata:
+      labels:
+        app: merchant-postgres
+    spec:
+      containers:
+        - name: merchant-postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_DB
+              value: merchant_db
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: merchant-service-secret
+                  key: DB_PASSWORD
+          volumeMounts:
+            - name: merchant-postgres-data
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            exec:
+              command: ["sh", "-c", "pg_isready -U postgres -d merchant_db"]
+            initialDelaySeconds: 10
+            periodSeconds: 5
+      volumes:
+        - name: merchant-postgres-data
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: merchant-postgres
+spec:
+  selector:
+    app: merchant-postgres
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432

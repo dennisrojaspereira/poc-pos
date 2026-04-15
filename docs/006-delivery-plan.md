@@ -16,3 +16,7 @@
 14. malha com `Istio`
 15. bootstrap local com `run-kind-platform.bat`
 16. template de `Application` do `Argo CD`
+17. IdP OIDC local com `Keycloak`
+18. RBAC baseado em JWT
+19. autorização contextual com `OPA`
+20. `merchant-service` com banco próprio
