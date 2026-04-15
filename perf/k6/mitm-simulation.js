@@ -17,12 +17,12 @@ export const options = {
             startTime: '1s',
             exec: 'strippedSignatureAttack',
         },
-        replay_attack_characterization: {
+        replay_attack_blocked: {
             executor: 'per-vu-iterations',
             vus: 2,
             iterations: 5,
             startTime: '2s',
-            exec: 'replayAttackCharacterization',
+            exec: 'replayAttackBlocked',
         },
     },
     thresholds: {
@@ -86,7 +86,7 @@ export function strippedSignatureAttack() {
     });
 }
 
-export function replayAttackCharacterization() {
+export function replayAttackBlocked() {
     const body = JSON.stringify({
         transactionId: uuidLike('tx-replay'),
         terminalId: 'term-replay',
@@ -104,13 +104,13 @@ export function replayAttackCharacterization() {
         'X-Signature': signature,
     };
 
-    group('replay attack characterization', () => {
+    group('replay attack blocked', () => {
         const firstResponse = http.post(`${BASE_URL}/authorize`, body, {
             responseCallback: http.expectedStatuses(200),
             headers,
         });
         const replayResponse = http.post(`${BASE_URL}/authorize`, body, {
-            responseCallback: http.expectedStatuses(200),
+            responseCallback: http.expectedStatuses(401),
             headers,
         });
 
@@ -118,7 +118,7 @@ export function replayAttackCharacterization() {
             'first signed request accepted': (r) => r.status === 200,
         });
         check(replayResponse, {
-            'replay currently accepted as idempotent request': (r) => r.status === 200,
+            'replay rejected with 401': (r) => r.status === 401,
         });
     });
 }

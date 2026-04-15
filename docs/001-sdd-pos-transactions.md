@@ -48,7 +48,7 @@ Execução alvo em Kubernetes local com `kind`, entrega contínua com `Argo` e s
 - retry controlado
 - circuit breaker
 - bulkhead
-- validação HMAC com timestamp e correlationId
+- validação HMAC com timestamp, correlationId e bloqueio de replay
 - reread on conflict após violação da unique constraint
 - suíte `k6` com dashboard
 - execução obrigatória de `mvn test` + regressão `k6` + security/load `k6`

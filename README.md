@@ -226,7 +226,7 @@ Esse teste cobre:
 - adulteracao de payload no caminho com assinatura calculada sobre o corpo original
 - replay da mesma requisicao assinada dentro da janela permitida
 
-Hoje o replay e aceito como requisicao idempotente. O teste existe para caracterizar o comportamento atual e deixar esse risco visivel.
+Agora o replay deve ser rejeitado com `401`, mesmo quando a assinatura e o payload sao validos.
 
 ### Chamada manual de health
 ```powershell

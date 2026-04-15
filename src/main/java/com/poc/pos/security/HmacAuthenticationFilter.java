@@ -33,19 +33,27 @@ public class HmacAuthenticationFilter extends OncePerRequestFilter {
     private final String secret;
     private final Duration allowedClockSkew;
     private final Clock clock;
+    private final HmacReplayProtectionService replayProtectionService;
 
     @Autowired
     public HmacAuthenticationFilter(
             @Value("${app.security.hmac.secret:change-me}") String secret,
-            @Value("${app.security.hmac.allowed-clock-skew:5m}") Duration allowedClockSkew
+            @Value("${app.security.hmac.allowed-clock-skew:5m}") Duration allowedClockSkew,
+            HmacReplayProtectionService replayProtectionService
     ) {
-        this(secret, allowedClockSkew, Clock.systemUTC());
+        this(secret, allowedClockSkew, Clock.systemUTC(), replayProtectionService);
     }
 
-    HmacAuthenticationFilter(String secret, Duration allowedClockSkew, Clock clock) {
+    HmacAuthenticationFilter(
+            String secret,
+            Duration allowedClockSkew,
+            Clock clock,
+            HmacReplayProtectionService replayProtectionService
+    ) {
         this.secret = secret;
         this.allowedClockSkew = allowedClockSkew;
         this.clock = clock;
+        this.replayProtectionService = replayProtectionService;
     }
 
     @Override
@@ -84,6 +92,7 @@ public class HmacAuthenticationFilter extends OncePerRequestFilter {
             )) {
                 throw new HmacAuthenticationException("Invalid HMAC signature");
             }
+            replayProtectionService.ensureNotReplayed(computedSignature);
 
             response.setHeader("X-Correlation-Id", correlationId);
             MDC.put("correlationId", correlationId);

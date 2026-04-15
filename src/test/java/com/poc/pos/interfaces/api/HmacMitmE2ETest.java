@@ -76,7 +76,7 @@ class HmacMitmE2ETest {
     }
 
     @Test
-    void shouldCurrentlyAcceptReplayWithinAllowedWindowAsIdempotentRequest() throws Exception {
+    void shouldRejectReplayWithinAllowedWindow() throws Exception {
         String body = """
                 {"transactionId":"tx-replay-1","terminalId":"term-replay","nsu":"nsu-replay-1","amount":10.00}
                 """.trim();
@@ -103,10 +103,7 @@ class HmacMitmE2ETest {
                         .header("X-Correlation-Id", correlationId)
                         .header("X-Feature-Variant", "control")
                         .header("X-Signature", signature))
-                .andExpect(status().isOk())
-                .andExpect(header().string("X-Correlation-Id", correlationId))
-                .andExpect(jsonPath("$.transactionId").value("tx-replay-1"))
-                .andExpect(jsonPath("$.status").value("AUTHORIZED"));
+                .andExpect(status().isUnauthorized());
 
         org.assertj.core.api.Assertions.assertThat(transactionRepository.count()).isEqualTo(1);
     }

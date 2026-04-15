@@ -4,6 +4,7 @@ import com.poc.pos.application.service.AuthorizeTransactionUseCase;
 import com.poc.pos.application.service.ConfirmTransactionUseCase;
 import com.poc.pos.application.service.VoidTransactionUseCase;
 import com.poc.pos.security.HmacAuthenticationFilter;
+import com.poc.pos.security.HmacReplayProtectionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -26,7 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = TransactionController.class)
-@Import({RestExceptionHandler.class, HmacAuthenticationFilter.class})
+@Import({RestExceptionHandler.class, HmacAuthenticationFilter.class, HmacReplayProtectionService.class})
 @TestPropertySource(properties = "app.security.hmac.secret=test-secret")
 class HmacAuthenticationFilterTest {
 
@@ -95,7 +96,7 @@ class HmacAuthenticationFilterTest {
     }
 
     @Test
-    void shouldAcceptReplayOfSignedRequestWithinAllowedWindow() throws Exception {
+    void shouldRejectReplayOfSignedRequestWithinAllowedWindow() throws Exception {
         when(authorizeTransactionUseCase.execute(any())).thenReturn(
                 com.poc.pos.domain.model.Transaction.authorize("tx-1", "term-1", "nsu-1", new java.math.BigDecimal("10.00"))
         );
@@ -121,8 +122,7 @@ class HmacAuthenticationFilterTest {
                         .header("X-Timestamp", timestamp)
                         .header("X-Correlation-Id", "corr-replay")
                         .header("X-Signature", signature))
-                .andExpect(status().isOk())
-                .andExpect(header().string("X-Correlation-Id", "corr-replay"));
+                .andExpect(status().isUnauthorized());
     }
 
     private String sign(String method, String path, String timestamp, String correlationId, String body) throws Exception {

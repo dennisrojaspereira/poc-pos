@@ -4,8 +4,10 @@
 - HMAC
 - timestamp
 - correlationId
+- protecao contra replay
 - teste negativo com assinatura inválida
 - teste negativo com timestamp expirado
+- teste negativo com replay da mesma requisicao assinada
 
 ## Resilience
 - timeout
