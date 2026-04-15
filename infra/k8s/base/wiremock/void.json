@@ -1,0 +1,9 @@
+{
+  "request": {
+    "method": "POST",
+    "urlPath": "/void"
+  },
+  "response": {
+    "status": 204
+  }
+}

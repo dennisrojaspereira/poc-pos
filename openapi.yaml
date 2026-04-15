@@ -1,0 +1,21 @@
+
+openapi: 3.0.0
+info:
+  title: POS API
+  version: 1.0
+paths:
+  /authorize:
+    post:
+      responses:
+        '200':
+          description: ok
+  /confirm:
+    post:
+      responses:
+        '204':
+          description: ok
+  /void:
+    post:
+      responses:
+        '204':
+          description: ok

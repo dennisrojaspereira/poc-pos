@@ -1,0 +1,30 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  - job_name: prometheus
+    static_configs:
+      - targets: ['prometheus:9090']
+
+  - job_name: poc-pos-app
+    metrics_path: /actuator/prometheus
+    static_configs:
+      - targets: ['host.docker.internal:8080', 'host.docker.internal:8082']
+        labels:
+          app: poc-pos
+          source: spring-boot
+
+  - job_name: istio-proxy
+    metrics_path: /stats/prometheus
+    static_configs:
+      - targets: ['host.docker.internal:15020']
+        labels:
+          source: istio-proxy
+
+  - job_name: istiod
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['host.docker.internal:15014']
+        labels:
+          source: istiod

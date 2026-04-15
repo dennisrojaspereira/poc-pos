@@ -1,0 +1,6 @@
+com\poc\pos\application\service\AuthorizeTransactionUseCaseTest$InMemoryTransactionRepository.class
+com\poc\pos\application\service\AuthorizeTransactionUseCaseTest$ConcurrentConflictRepository.class
+com\poc\pos\application\service\AuthorizeTransactionUseCaseTest$CountingPaymentProcessor.class
+com\poc\pos\application\service\AuthorizeTransactionUseCaseTest.class
+com\poc\pos\interfaces\api\HmacAuthenticationFilterTest.class
+com\poc\pos\domain\model\TransactionTest.class

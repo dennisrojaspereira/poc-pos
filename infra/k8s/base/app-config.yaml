@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pos-api-config
+data:
+  DB_URL: jdbc:postgresql://postgres.pos-system.svc.cluster.local:5432/poc_pos
+  DB_USERNAME: postgres
+  PAYMENT_PROCESSOR_BASE_URL: http://payment-processor-mock.pos-system.svc.cluster.local:8080
+  APP_ENVIRONMENT: kind
+  OTEL_EXPORTER_OTLP_TRACES_ENDPOINT: http://host.docker.internal:4318/v1/traces

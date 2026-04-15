@@ -1,0 +1,49 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: pos-api-gateway
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*"
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: pos-api
+spec:
+  hosts:
+    - "*"
+  gateways:
+    - pos-api-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /authorize
+        - uri:
+            prefix: /confirm
+        - uri:
+            prefix: /void
+        - uri:
+            prefix: /actuator
+      route:
+        - destination:
+            host: pos-api
+            port:
+              number: 8080
+---
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: pos-api
+spec:
+  host: pos-api
+  trafficPolicy:
+    loadBalancer:
+      simple: ROUND_ROBIN

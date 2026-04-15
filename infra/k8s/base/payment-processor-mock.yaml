@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment-processor-mock
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment-processor-mock
+  template:
+    metadata:
+      labels:
+        app: payment-processor-mock
+    spec:
+      containers:
+        - name: wiremock
+          image: wiremock/wiremock:3.9.1
+          args:
+            - --global-response-templating
+            - --verbose
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: wiremock-mappings
+              mountPath: /home/wiremock/mappings
+      volumes:
+        - name: wiremock-mappings
+          configMap:
+            name: wiremock-mappings
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment-processor-mock
+spec:
+  selector:
+    app: payment-processor-mock
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
