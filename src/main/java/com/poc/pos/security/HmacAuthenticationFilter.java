@@ -38,7 +38,7 @@ public class HmacAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     public HmacAuthenticationFilter(
             @Value("${app.security.hmac.secret:change-me}") String secret,
-            @Value("${app.security.hmac.allowed-clock-skew:5m}") Duration allowedClockSkew,
+            @Value("${app.security.hmac.allowed-clock-skew:PT5M}") Duration allowedClockSkew,
             HmacReplayProtectionService replayProtectionService
     ) {
         this(secret, allowedClockSkew, Clock.systemUTC(), replayProtectionService);

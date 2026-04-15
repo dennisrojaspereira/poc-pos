@@ -15,7 +15,7 @@ public class HmacReplayProtectionService {
     private final Duration replayTtl;
     private final ConcurrentHashMap<String, Instant> seenRequests = new ConcurrentHashMap<>();
 
-    public HmacReplayProtectionService(@Value("${app.security.hmac.replay-ttl:5m}") Duration replayTtl) {
+    public HmacReplayProtectionService(@Value("${app.security.hmac.replay-ttl:PT5M}") Duration replayTtl) {
         this.replayTtl = replayTtl;
     }
 

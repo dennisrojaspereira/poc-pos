@@ -43,8 +43,8 @@ app:
   security:
     hmac:
       secret: ${HMAC_SECRET:change-me}
-      allowed-clock-skew: 5m
-      replay-ttl: 5m
+      allowed-clock-skew: PT5M
+      replay-ttl: PT5M
   payment-processor:
     base-url: ${PAYMENT_PROCESSOR_BASE_URL:http://localhost:8081}
     timeout:
